@@ -192,7 +192,7 @@ while running:
                                 winner = check_winner(board)
                                 turn = human
 
-            elif game == "chess":
+            elif game == "chess": 
                 if e.type == pygame.KEYDOWN and e.key == pygame.K_m:
                     menu = True
                 elif not chess_board.is_game_over() and e.type == pygame.MOUSEBUTTONDOWN:
