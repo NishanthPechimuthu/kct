@@ -1,6 +1,5 @@
 import itertools
 
-# --------- Sudoku Solver (Backtracking) ---------
 def is_safe_sudoku(grid, row, col, num):
     for x in range(9):
         if grid[row][x] == num or grid[x][col] == num:
@@ -38,7 +37,6 @@ def print_sudoku(grid):
         if (i+1) % 3 == 0:
             print("+-------+-------+-------+")
 
-# --------- N-Queens Solver ---------
 def n_queens(N):
     positions = []
     for perm in itertools.permutations(range(N)):
@@ -57,7 +55,6 @@ def print_n_queens(pos, N):
             print("+" + "---+"*N)
         print()
 
-# --------- Menu ---------
 while True:
     print("\n1. Sudoku\n2. N-Queens\n3. Exit")
     choice = input("Choose option: ")

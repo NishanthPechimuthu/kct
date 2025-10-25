@@ -6,47 +6,12 @@
         /* ------------------- Python ------------------- */
         {
             "name": "Python: Current File",
-            "type": "py",
+            "type": "python",                     // correct type
             "request": "launch",
-            "program": "${file}",               // the file you have open
-            "console": "integratedTerminal",    // runs in VS Code terminal
-            "justMyCode": true
-        },
-
-        /* ------------------- C++ (g++) ------------------- */
-        {
-            "name": "C++: Build & Run (g++)",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/out/${fileBasenameNoExtension}", // where the exe will be
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "gdb",                    // change to "lldb" on macOS if you prefer
-            "miDebuggerPath": "/usr/bin/gdb",   // path to gdb (adjust if needed)
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ],
-
-            /* ----- Pre-launch task: compile ----- */
-            "preLaunchTask": "C++: g++ build active file",
-
-            /* ----- Windows-specific ----- */
-            "windows": {
-                "MIMode": "gdb",
-                "miDebuggerPath": "C:\\mingw64\\bin\\gdb.exe"   // adjust to your MinGW gdb
-            },
-
-            /* ----- macOS-specific ----- */
-            "osx": {
-                "MIMode": "lldb"
-            }
+            "program": "${file}",                 // file you have open
+            "console": "integratedTerminal",      // run in VS Code terminal
+            "justMyCode": true,
+            "python": "${command:python.interpreterPath}"   // always use the selected interpreter
         }
     ]
 }
