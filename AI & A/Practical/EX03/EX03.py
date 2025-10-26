@@ -26,6 +26,3 @@ print("Grandparents of Alice:", Grandparent(X, 'Alice').data)
 print("Siblings of Mary:", Sibling('Mary', X).data)
 print("Fathers:", Father(X, Y).data)
 print("Mothers:", Mother(X, Y).data)
-
-print("Is John a Grandparent of Alice?", ('John',) in Grandparent(X, 'Alice').data)
-print("Is Mary the Mother of Alice?", ('Mary',) in Mother(X, 'Alice').data)
