@@ -1,84 +1,41 @@
-from sympy import symbols, Eq, solve
+from pgmpy.models import DiscreteBayesianNetwork
+from pgmpy.factors.discrete import TabularCPD
+from pgmpy.inference import VariableElimination
+from pgmpy.sampling import BayesianModelSampling
+import matplotlib.pyplot as plt
+import networkx as nx
 
-def bayesian_network_sympy():
+model = DiscreteBayesianNetwork([("Temperature", "Rain"), ("Rain", "Humidity")])
 
-    R, S, W = symbols('R S W')
+cpd_temp = TabularCPD(variable="Temperature", variable_card=3, values=[[0.3], [0.4], [0.3]])
 
-    P_R1 = 0.3  
-    P_R0 = 0.7  
-    P_S1 = 0.4  
-    P_S0 = 0.6  
+cpd_rain = TabularCPD(
+    variable="Rain", variable_card=2,
+    values=[[0.8, 0.4, 0.2],
+            [0.2, 0.6, 0.8]],
+    evidence=["Temperature"], evidence_card=[3]
+)
 
-    P_W_given_RS = {
-        (1, 1): 0.99,
-        (1, 0): 0.9,
-        (0, 1): 0.1,
-        (0, 0): 0.0
-    }
+cpd_humidity = TabularCPD(
+    variable="Humidity", variable_card=2,
+    values=[[0.7, 0.3],
+            [0.3, 0.7]],
+    evidence=["Rain"], evidence_card=[2]
+)
 
-    rain = int(input("Evidence: Rain (0-No,1-Yes)? "))
-    sprinkler = int(input("Evidence: Sprinkler (0-No,1-Yes)? "))
+model.add_cpds(cpd_temp, cpd_rain, cpd_humidity)
+model.check_model()
 
-    prob_W1 = P_W_given_RS[(rain, sprinkler)]
-    prob_W0 = 1 - prob_W1
+infer = VariableElimination(model)
 
-    print(f"\nP(WetGrass=Yes | Rain={rain}, Sprinkler={sprinkler}) = {prob_W1}")
-    print(f"P(WetGrass=No  | Rain={rain}, Sprinkler={sprinkler}) = {prob_W0}")
+print(infer.query(variables=["Rain"], evidence={"Temperature": 0}))
+print(infer.map_query(variables=["Humidity"], evidence={"Rain": 1}))
 
-def hmm_sympy():
-    R, S = symbols('R S')
-    
-    W, Sh, C = symbols('W Sh C')
+sampler = BayesianModelSampling(model)
+print(sampler.forward_sample(size=5))
 
-    P_RR = 0.7
-    P_RS = 0.3
-    P_SR = 0.4
-    P_SS = 0.6
-
-    P_W_R = 0.1
-    P_Sh_R = 0.4
-    P_C_R = 0.5
-    P_W_S = 0.6
-    P_Sh_S = 0.3
-    P_C_S = 0.1
-
-    obs_input = input("Enter observation sequence (W=0, Sh=1, C=2) comma separated: ")
-    obs_seq = [int(x) for x in obs_input.split(",")]
-
-    obs_map = {0: W, 1: Sh, 2: C}
-
-    first_obs = obs_map[obs_seq[0]]
-    P_R = 0.6
-    P_S = 0.4
-
-    if first_obs == W:
-        prob_R = P_R * P_W_R
-        prob_S = P_S * P_W_S
-    elif first_obs == Sh:
-        prob_R = P_R * P_Sh_R
-        prob_S = P_S * P_Sh_S
-    else:
-        prob_R = P_R * P_C_R
-        prob_S = P_S * P_C_S
-
-    total = prob_R + prob_S
-    prob_R /= total
-    prob_S /= total
-
-    print(f"\nAfter first observation {first_obs}:")
-    print(f"P(Rainy) = {prob_R}")
-    print(f"P(Sunny) = {prob_S}")
-    print("\nFurther steps can be computed recursively using Bayes rule symbolically.")
-
-while True:
-    print("\n1. Bayesian Network (SymPy)\n2. Hidden Markov Model (SymPy)\n3. Exit")
-    choice = input("Choose option: ")
-    
-    if choice == "1":
-        bayesian_network_sympy()
-    elif choice == "2":
-        hmm_sympy()
-    elif choice == "3":
-        break
-    else:
-        print("Invalid option!")
+G = nx.DiGraph()
+G.add_edges_from(model.edges())
+pos = nx.spring_layout(G)
+nx.draw(G, pos, with_labels=True, node_size=3000, font_size=12)
+plt.show()
