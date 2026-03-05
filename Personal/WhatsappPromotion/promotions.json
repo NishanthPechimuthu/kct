@@ -1,0 +1,10 @@
+[
+  {
+    "image": "https://picsum.photos/200/300",
+    "message": "Messsage 123!",
+    "buttons": [
+      "Interest",
+      "Not Interest"
+    ]
+  }
+]

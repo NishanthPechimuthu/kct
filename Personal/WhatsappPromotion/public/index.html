@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Manual Promotion</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 30px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px;
+        }
+
+        button {
+            padding: 10px 15px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Add Promotion</h2>
+
+    <input id="image" placeholder="Image URL">
+    <textarea id="message" placeholder="Promotion Message"></textarea>
+    <input id="button1" placeholder="Button 1 Text">
+    <input id="button2" placeholder="Button 2 Text">
+
+    <button onclick="savePromotion()">Save Promotion</button>
+
+    <script>
+        function savePromotion() {
+            fetch("/add-promotion", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    image: document.getElementById("image").value,
+                    message: document.getElementById("message").value,
+                    buttons: [
+                        document.getElementById("button1").value,
+                        document.getElementById("button2").value
+                    ]
+                })
+            })
+                .then(res => res.json())
+                .then(data => alert(data.message));
+        }
+    </script>
+
+    <br><br>
+    <a href="schedule.html">Go to Schedule Page</a>
+
+</body>
+
+</html>
